@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -15,7 +14,10 @@ class GetCallApiView(APIView):
 
 class GetCallDetailApiView(APIView):
     def get(self, request, pk):
-        call = get_object_or_404(Call, pk=pk)
+        try:
+            call = Call.objects.get(pk=pk)
+        except Call.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = CallSerializer(call)
         return Response(serializer.data)
 
@@ -31,8 +33,11 @@ class CreateCallApiView(APIView):
 
 class UpdateCallApiView(APIView):
     def put(self, request, pk):
-        call = get_object_or_404(Call, pk=pk)
-        serializer = CallSerializer(instance=call, data=request.data)
+        try:
+            call = Call.objects.get(pk=pk)
+        except Call.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = CallSerializer(call, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -41,6 +46,9 @@ class UpdateCallApiView(APIView):
 
 class DeleteCallApiView(APIView):
     def delete(self, request, pk):
-        call = get_object_or_404(Call, pk=pk)
+        try:
+            call = Call.objects.get(pk=pk)
+        except Call.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         call.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
