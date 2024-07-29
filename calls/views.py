@@ -7,9 +7,9 @@ from django.contrib.auth import authenticate
 
 
 class SuperUserLoginApiView(APIView):
-    def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
+    def get(self, request):
+        username = request.query_params.get('username')
+        password = request.query_params.get('password')
 
         user = authenticate(username=username, password=password)
 
