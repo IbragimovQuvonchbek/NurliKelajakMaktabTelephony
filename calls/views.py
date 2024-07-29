@@ -3,6 +3,22 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Call
 from .serializers import CallSerializer
+from django.contrib.auth import authenticate
+
+
+class SuperUserLoginApiView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user is not None and user.is_superuser:
+            return Response({
+                'username': user.username,
+                'email': user.email
+            })
+        return Response({'error': 'Invalid credentials or not a superuser'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class GetCallApiView(APIView):
