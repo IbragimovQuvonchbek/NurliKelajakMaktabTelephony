@@ -11,7 +11,7 @@ class SuperUserLoginApiView(APIView):
 
         user = authenticate(username=username, password=password)
 
-        if user is not None and user.is_superuser:
+        if user is not None:
             return Response({
                 'username': user.username,
                 'email': user.email
