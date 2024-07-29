@@ -16,9 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from user.views import SuperUserLoginApiView
 
 urlpatterns = [
-    path('superuser-login/', include('user.urls')),
     path('api/v1/calls/', include('calls.urls')),
+    path('superuser-login/', SuperUserLoginApiView.as_view()),
     path('', admin.site.urls),
 ]
